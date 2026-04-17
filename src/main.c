@@ -235,6 +235,10 @@ static void wifi_scan_cycle(void)
 {
 	printk("=== Cycle WiFi : %d scans ===\n", NB_SCANS);
 
+	/* Réabonnement à l'événement de fin de scan (peut être perdu après CFUN=4/1) */
+	send_at("AT%WIFIEV=\"REGSCAN\",1");
+	wait_for("OK", 3000);
+
 	/* Vide les résultats précédents avant de commencer */
 	send_at("AT%WIFICMD=\"CLEARRES\"");
 	wait_for("OK", 3000);
