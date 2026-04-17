@@ -221,11 +221,8 @@ static int gnss_scan_cycle(void)
 	wait_for("OK", 5000);
 
 restore_lte:
-	send_at("AT+CFUN=1");
-	wait_for("OK", 10000);
-	wait_lte_registered(60000);
 	send_at("AT+CFUN=5");
-	wait_for("OK", 5000);
+	wait_for("OK", 10000);
 
 	return got_fix;
 }
