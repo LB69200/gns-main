@@ -1,0 +1,10 @@
+nRF54L15-PDK  ->  Telit EVB 2.0 / ME310M1-W1
+----------------------------------------------
+P1.09  ->  C103 / TXD  (rouge(pour ma part))
+P1.10  ->  C104 / RXD  (jaune)
+P1.11  ->  C108 / DTR  (controle sleep)
+GND    ->  GND          (marron)
+
+EVB : C108/DTR relie a GPIO01 via cable blanc
+Module : AT#GPIO=1,0,9 mappe GPIO1 sur le signal DTR
+
