@@ -1,0 +1,1487 @@
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 603 of 737 2025-08-26
+MQTT
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 604 of 737 2025-08-26
+AT#MQEN - Enable MQTT Feature
+This command initializes a MQTT client and allocates the necessary resources.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQEN=<instanceNumber>,<enable>
+Set command enables/disables the MQTT client for further configuration and
+usage.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<enable> integer N/A selects if client must be
+activated or deactivated
+Values:
+0 : disable
+1 : enable
+AT#MQEN?
+Read command returns the status of the MQTT stack in the format
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 605 of 737 2025-08-26
+#MQEN: <instanceNumber>,<enabled>
+AT#MQEN=?
+Test command reports the available range of values for parameters.
+Read command
+AT#MQEN?
+#MQEN: 1,1
+#MQEN: 2,0
+OK
+Test command
+AT#MQEN=?
+#MQEN: (1-maxClients),(0-1)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 606 of 737 2025-08-26
+AT#MQCFG - Configure MQTT Parameters
+This sets the connection parameters for the selected MQTT client.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQCFG=<instanceNumber>,<hostname>,<port>,<cid>[,<sslEn>,<sslInstance>]
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance. The
+list of available clients is
+obtained with AT#MQEN? or
+the read command
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<hostname> string - URL of the MQTT broker.
+Default value: 0.
+Maximum length of
+<hostname> is 512 characters.
+<port> integer 0 TCP port of the MQTT broker
+Value:
+1÷65535 : TCP port range
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 607 of 737 2025-08-26
+<cid> integer N/A PDP Context ID to be used for
+the connection. PDP context
+should be enabled before
+giving this command. Default
+value 0.
+Value:
+1÷6 : <cid> range
+<sslEn> integer 0 enable/disable SSL
+Values:
+0 : disable
+1 : enable
+<sslInstance> integer 1 selects the ssl instance
+configuration to be used for
+this MQTT client. The list of
+available ssl instances is
+obtained with the read
+command.
+Value:
+1÷maxClients : ssl instance range. To know
+ssl instance value use test
+command. If the value is
+not provided it will select
+ssl instance 1 by default
+AT#MQCFG?
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 608 of 737 2025-08-26
+Read command returns the configuration of all active MQTT clients in the format:
+#MQCFG: <instanceNumber>,<hostname>,<port>,<cid>[,<sslEn>,<sslinstance>]
+AT#MQCFG=?
+Test command reports the available range of values for parameters.
+• SSL disabled (by default)
+AT#MQCFG=1,api.mybroker.com,1883,3
+OK
+Read command
+AT#MQCFG?
+#MQCFG: 1,api.mybroker.com,1883,3,0
+#MQCFG: 2,,1883,1
+OK
+Test command
+AT#MQCFG=?
+#MQCFG: (1-maxClients),512,(1-65535),(1-6),(0-1),(1-
+maxSSLInstance)
+OK
+• SSL enabled
+AT#MQCFG=1,api.mybroker.com,8883,3,1
+OK
+Read command
+AT#MQCFG?
+#MQCFG: 1,api.mybroker.com,8883,3,1
+#MQCFG: 2,,1883,1,0
+OK
+Test command
+AT#MQCFG=?
+#MQCFG: (1-maxClients),512,(1-65535),(1-6),(0-1) ),(1-
+maxSSLInstance)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 609 of 737 2025-08-26
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 610 of 737 2025-08-26
+AT#MQDISC - Log Out and Disconnect from the MQTT
+Broker
+This command performs the logout and disconnection from to the MQTT broker.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQDISC=<instanceNumber>
+Disconnects gracefully from the MQTT broker, then closes the network connection
+Parameter:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+AT#MQDISC=?
+Test command reports the available range of values for parameters.
+AT#MQDISC=1
+OK
+Test command
+AT#MQDISC=?
+#MQDISC: (1-maxClients)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 611 of 737 2025-08-26
+AT#MQCONN - Connect and Log in the MQTT Broker
+This command performs the connection and login to the MQTT broker.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQCONN=<instanceNumber>,<clientID>,<userName>,<passWord>
+Set command performs network connection (using parameters set with #MQCFG)
+and sends the CONNECT packet to the MQTT broker.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance. The
+list of available clients is
+obtained with AT#MQEN? or
+the read command.
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<clientID> string - identifies each MQTT client that
+connects to the MQTT broker.
+Maximum length of <clientID>
+is 512.
+<userName> string - authentication and
+authorization.
+Maximum length of
+<userName> is 512.
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 612 of 737 2025-08-26
+<passWord> string - authentication and
+authorization.
+Maximum length of
+<passWord> is 512.
+If connection status is other than init state or connected,
+disconnect using #MQDISC before reconnecting using #MQCONN.
+AT#MQCONN?
+Read command reports the configuration of active MQTT connections in the
+format:
+#MQCONN=<instanceNumber>,<state>
+Additional info:
+The following tables shows the <state> values and meanings:
+Client status:
+<state>
+Normal/ Failure Events Values
+0 client is initialized but not connected
+1 client performed MQTT authentication with
+broker
+2 connection closed or reset by the server
+3 the answer to the ping request packet was
+not received
+4 the CONNACK packet was not received
+5 the CONNECT packet was not delivered
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 613 of 737 2025-08-26
+6 failure in the m2mb APIs
+7 socket timeout or read error
+AT#MQCONN=?
+Test command reports the available range of values for parameters.
+AT#MQCONN=1,myClientID,myUser,myPassword
+OK
+Scenario (1)
+Read command
+AT#MQCONN?
+#MQCONN: 1,1
+#MQCONN: 2,0
+OK
+Test command
+AT#MQCONN=?
+#MQCONN: (1-maxClient),100,512,512
+OK
+Scenario (2)
+Read command
+AT#MQCONN?
+#MQCONN: 1,2
+OK
+Set command
+AT#MQDISC=1
+OK
+Read command
+AT#MQCONN?
+#MQCONN: 1,0
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 614 of 737 2025-08-26
+AT#MQCFG2 - Configure Additional MQTT Parameters
+This command sets the optional connection parameters for the selected MQTT client.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQCFG2=<instanceNumber>,<keepAlive>,<cleanSession>
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance. The
+list of available clients is
+obtained with AT#MQEN? or
+the read command.
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<keepAlive> integer 60 timeout of periodic packet to
+keep connection open
+Value:
+60÷3600 : timeout expressed in sec
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 615 of 737 2025-08-26
+<cleanSession> integer 1 Indicates whether a persistent
+connection is required.
+Without a persistent
+connection, when the client is
+offline all information and
+messages that are queued
+from a previous persistent
+session are lost.
+Values:
+1 : clean session
+0 : persistent session
+AT#MQCFG2?
+Read command returns the configuration of all active MQTT clients in the format:
+#MQCFG2: <instanceNumber>,<keepAlive>,<cleanSession>
+AT#MQCFG2=?
+Test command reports the available range of values for parameters.
+AT# MQCFG2=1,60,1
+OK
+Read command
+AT#MQCFG2?
+#MQCFG2: 1,60,1
+#MQCFG2: 2,70,1
+OK
+Test command
+AT#MQCFG2=?
+#MQCFG2: (1-maxClients),(60-3600),(0-1)
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 616 of 737 2025-08-26
+AT#MQWCFG - Configure MQTT Last Will and Testament
+This command sets Last Will and Testament for the selected MQTT client.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQWCFG=<instanceNumber>,<willFlag>[,<willRetain>,<willQos>,<willTopic>,<willMsg>]
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance. The list of
+available clients is obtained with
+AT#MQEN? or the read command.
+Value:
+1÷maxClients : client instance range. To know
+maxClients value use test
+command
+<willFlag> integer 0 selects whether the client needs to
+specify a Last Will and Testament. If
+set to 0, this is the last parameter to
+be set.
+Values:
+0 : the client does not need to specify a Last Will
+and Testament
+1 : the client needs to specify a Last Will and
+Testament
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 617 of 737 2025-08-26
+<willRetain> integer 0 selects whether the Last Will message
+needs to be retained by the server
+Values:
+0 : the Last Will message does not need to be
+retained by the server
+1 : the Last Will message needs to be retained by
+the server
+<willQos> integer 0 Quality of Service of the Last Will
+message
+Value:
+0÷2 : Quality of Service range
+<willTopic> string - Topic to publish the Last Will message
+to. Unused. Maximum length of
+<willTopic> is 256.
+<willMsg> string - Last Will message. Maximum length of
+<willMsg> is 1024. 
+AT#MQWCFG?
+Read command returns the Last Will and Testament (if any) of all active MQTT clients in
+the format:
+#MQWCFG:<instanceNumber>,<willFlag>[,<willRetain>,<willQos>,<willTopic>, <willMsg>]
+AT#MQWCFG=?
+Test command reports the available range of values for parameters.
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 618 of 737 2025-08-26
+AT#MQWCFG=1,0
+OK
+AT#MQWCFG=1,1,1,2,myLastWillTopic,myLastWillMessage
+OK
+Read command
+AT#MQWCFG?
+#MQWCFG: 1,0
+#MQWCFG: 2,1,0,2,myTopic,myMessage
+OK
+Test command
+AT#MQWCFG=?
+#MQWCFG: (1-maxClients),(0-1),(0-1),(0-2),256,1024
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 619 of 737 2025-08-26
+AT#MQUNS - Unsubscribe from a Topic
+This command revokes the subscription to a MQTT topic.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQUNS=<instanceNumber>,<topic>
+Parameters:
+Name Type Default Description
+<instanceNumber> string N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<topic> string - name of the topic.
+Maximum length of <topic> is
+256.
+AT#MQUNS=?
+Test command reports the available range of values for parameters.
+AT#MQUNS=1,topicToUnsubscribe
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 620 of 737 2025-08-26
+Test command
+AT#MQUNS=?
+#MQUNS: (1-maxClients),
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 621 of 737 2025-08-26
+AT#MQTCFG - Configure Timeout Parameters for MQTT
+Transmission
+This command writes the timeout options for the specified client.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQTCFG=<instanceNumber>,<pktTimeout>
+Parameters:
+Name Type Default Description
+<instanceNumber> string N/A selects the client instance. The
+list of available clients is
+obtained with AT#MQEN? or
+the read command.
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<pktTimeout> integer 10 timeout of the packet delivery
+Value:
+1÷60 : timeout range. Value expressed in
+seconds
+AT#MQTCFG?
+Read command returns the timeout configuration of all active MQTT clients in the
+format
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 622 of 737 2025-08-26
+#MQTCFG: <instanceNumber>,<pktTimeout>
+AT#MQTCFG=?
+Test command reports the available range of values for parameters
+AT#MQTCFG=1,10
+OK
+Read command
+AT#MQTCFG?
+#MQTCFG: 1,5
+#MQTCFG: 1,4
+OK
+Test command
+AT#MQTCFG=?
+#MQTCFG: (1-maxClients),(1-60)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 623 of 737 2025-08-26
+AT#MQSUB - Subscribe to a Topic
+This command performs the subscription to a MQTT topic
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSUB=<instanceNumber>,<topic>[,<qos>]
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<topic> string - name of the topic.
+Maximum length of <topic> is
+256.
+<qos> integer 1 Configures qos for the
+subscription.
+This is an optional parameter. If
+<qos> is not specified, <qos> 1
+is taken as default.                      
+              
+Value:
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 624 of 737 2025-08-26
+0÷2 : qos range
+AT#MQSUB=?
+Test command reports the available range of values for parameters.
+AT#MQSUB=1,topicToSubscribe
+OK
+AT#MQSUB=1,topicToSubscribe_2,0
+OK
+Test command
+AT#MQSUB=?
+#MQSUB: (1-maxClients),256, (0-2)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 625 of 737 2025-08-26
+AT#MQPUBS - Publish ASCII String
+This command publishes an ASCII string to the specified MQTT topic.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQPUBS=<instanceNumber>,<topic>,<retain>,<qos>,<message>
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<topic> string - name of the topic.
+Maximum length of <topic> is
+256.
+<retain> integer N/A specifies if the broker must
+retain this message or not
+Values:
+0 : Not retained
+1 : Retain
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 626 of 737 2025-08-26
+<qos> integer N/A specifies the Quality of Service
+of this message
+Value:
+0÷2 : Quality of Service range
+<message> string - message to publish on the
+topic.
+Maximum length of
+<message> is 1024.
+Please refer to #PUBSEXT
+command for higher message
+length.
+AT#MQPUBS=?
+Test command reports the available range of values for parameters.
+AT#MQPUBS=1,myTopic,0,0,myMessage
+OK
+Test command
+AT#MQPUBS=?
+#MQPUBS: (1-maxClients),256,(0-1),(0-2),1024
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 627 of 737 2025-08-26
+AT#MQPUBSEXT - Publish Extension command
+This command publishes data to the specified MQTT topic.
+SIM Presence Setting saved Can be aborted
+Required Auto No
+AT#MQPUBSEXT=<instanceNumber>,<topic>,<retain>,<qos>,<dataLen>
+After entering AT#MQPUBSEXT=... command, and terminated the command line
+with <CR>, the module returns the following three characters sequence prompt,
+and waits for data to send:
+<greater_than><greater_than><greater_than>   (see IRA character set: 62, 62, 62)
+Now, data can be entered from TE, sized <dataLen> bytes.  If user does not enters
+any input for 10 seconds, command is terminated with error.
+If sending ends successfully and acknowledgment is received for QoS > 0, the
+response will be OK, otherwise an error will be reported.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<topic> string - name of the topic.
+Maximum length of <topic> is
+256
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 628 of 737 2025-08-26
+<retain> integer N/A specifies if the broker must
+retain this message or not
+Values:
+0 : retain
+1 : no retain
+<qos> integer N/A specifies the Quality of Service
+of this message
+Value:
+0÷2 : Quality of Service range
+<dataLen> integer - Length of message to publish
+on the topic.
+Maximum length of <dataLen>
+can go up to 65536 depending
+on system memory available.
+AT#MQPUBSEXT=?
+Test command reports the available range of values for parameters.
+Publish 100 byte message
+AT#MQPUBSEXT=1,myTopic,0,0,100
+>>>
+OK
+Test command
+AT#MQPUBSEXT=?
+#MQPUBSEXT: (1-maxClients),256,(0-1),(0-2),(0-65536)
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 629 of 737 2025-08-26
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 630 of 737 2025-08-26
+AT#MQREAD - Read Messages Received from the MQTT
+Broker
+This command reads the message payload from the queue slot provided.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQREAD=<instanceNumber>,<mId>
+After command line is terminated with <CR>, the module responds sending:
+#MQREAD: <instanceNumber>,<topic>,<payload_len>,
+then the module prompts the following characters sequence:
+<less_than><less_than><less_than><carriage return><line feed>       (IRA 60, 60,
+60, 13, 10)
+followed by the data
+Parameters:
+Name Type Default Description
+<instanceNumber> string N/A selects the client instance to
+activate or deactivate
+Value:
+1÷maxClients : client instance range. To
+know maxClients value use
+test command
+<mId> integer N/A message slot Id to be read. The
+read operation will free the
+slot resource.
+Value:
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 631 of 737 2025-08-26
+1÷30 : message slot Id range
+Additional info:
+UNSOLICITED MESSAGE:
+#MQRING - Received data on subscribed topic 
+When a message is received on the subscribed topic, an URC
+message is sent to all AT commands interfaces. There are 30
+messages slots available for incoming messages, and it is
+responsibility of the user to keep them empty by reading them
+with #MQREAD.
+If the message queue is full, and a new message arrives, the
+following URC #MQRING: 0 is received.
+Otherwise, for normal messages, the URC format is:
+#MQRING: <instanceNumber>,<mId>,<topic>,<len>
+In the Unsolicited fields section are described the URC message
+parameters not described in the previous sections.
+Unsolicited fields:
+Name Type Description
+<topic> string name of the topic from where the message was
+received
+<len> integer length in bytes of the received payload
+AT#MQREAD?
+Read command returns the unread messages count for each instance number for
+all active MQTT clients in the format:
+#MQREAD: <instanceNumber>,<unread>
+AT#MQREAD=?
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 632 of 737 2025-08-26
+Test command reports the available range of values for parameters.
+AT#MQREAD=1,2
+#MQREAD: 1,myTopic,10
+<<<
+0123456789
+Read command
+AT#MQREAD?
+#MQREAD: 1,0
+#MQREAD: 2,3
+OK
+Test command
+AT#MQREAD=?
+#MQREAD: (1-maxClients),(1-30)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 633 of 737 2025-08-26
+MQTT-SN
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 634 of 737 2025-08-26
+AT#MQSNEN - Enable MQTT-SN feature
+This command initializes a MQTT-SN client and allocates the necessary resources.
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNEN=<instanceNumber>,<enable>
+Set command enables/disables the MQTT-SN client for further configuration and
+usage
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance to
+activate or deactivate. The list
+of available clients is obtained
+with the read command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<enable> integer N/A Sets if the selected client must
+be activated or deactivated
+Values:
+0 : Disable
+1 : Enable
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 635 of 737 2025-08-26
+AT#MQSNEN?
+Read command returns the status of the MQTT-SN stack in the format
+#MQSNEN: <instanceNumber>,<enabled>
+AT#MQSNEN=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNEN=1,1
+OK
+• Read example
+AT#MQSNEN?
+#MQSNEN: 1,1
+#MQSNEN: 2,0
+#MQSNEN: 3,0
+#MQSNEN: 4,0
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNEN=?
+#MQSNEN: (1-maxClients),(0-1)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 636 of 737 2025-08-26
+AT#MQSNCFG2 - Configure additional MQTT-SN parameters
+This command sets the optional connection parameters for the selected MQTT-SN client
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNCFG2=<instanceNumber>,<keepalive>,<clean_session>
+Set command writes the MQTT-SN parameters for the specified client
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of available clients is
+obtained with AT#MQSNEN? or
+the read command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<keepalive> integer 60 Timeout of periodic packet to
+keep connection open
+Value:
+60÷3600 : Timeout in seconds
+<clean_session> integer 1 Indicates whether or not a
+persistent connection is
+required. Without a persistent
+connection, when the client is
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 637 of 737 2025-08-26
+offline all information and
+messages that are queued
+from a previous persistent
+session are lost.
+Values:
+0 : persistent session
+1 : clean session
+AT#MQSNCFG2?
+Read command returns the configuration all active MQTT-SN clients in the format
+#MQSNCFG2: <instanceNumber>,<keepalive>,<clean_session>
+AT#MQSNCFG2=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNCFG2=1,120,1
+OK
+AT#MQSNCFG2=2,90,0
+OK
+• Read example
+AT#MQSNCFG2?
+#MQSNCFG2: 1,120,1
+#MQSNCFG2: 2,90,0
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 638 of 737 2025-08-26
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNCFG2=?
+#MQSNCFG2: (1-maxClients),(60-3600),(0-1)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 639 of 737 2025-08-26
+AT#MQSNREG - Register to a Topic
+Performs the registration to a MQTT-SN topic
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNREG=<instanceNumber>,<topic>
+Client sends register message to the Gateway for requesting a topic id value for
+the included topic name. Command displays topic id received upon success.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of active clients is obtained
+with AT#MQSNCONN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<topic> string - Name of the topic. Maximum
+length supported is 256.
+Additional info:
+In case of success, execution command returns topic id received
+for the specified topic in the format:
+#MQSNREG: <topic_id>
+AT#MQSNREG=?
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 640 of 737 2025-08-26
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNREG=1,topicToRegister
+#MQSNREG: 1
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNREG=?
+#MQSNREG: (1-maxClients),256
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 641 of 737 2025-08-26
+AT#MQSNPUBS - Publish to the specific topic
+Publishes an ASCII string to the specified MQTT-SN topic
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNPUBS=<instanceNumber>,<topic_type>,<topic/
+topicId>,<retain>,<qos>,<message>
+Publishes a string to a topic
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of active clients is obtained
+with AT#MQSNEN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<topic_type> integer N/A Type of topic/topic id
+Values:
+0 : Normal topic id (received from
+AT#MQSNREG)
+1 : Pre-defined topic id
+2 : Short topic
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 642 of 737 2025-08-26
+<topic/topicId> string - Normal topic id or short topic
+or pre-defined topic id.
+Maximum length is 2.
+<retain> integer N/A Specifies if the Gateway must
+retain this message or not
+Values:
+0 : Do not retain
+1 : Must retain
+<qos> integer N/A Specifies the Quality of Service
+of this message
+Values:
+0 : At most once delivery
+1 : At least once delivery
+2 : Exactly once delivery
+3 : Publish with QoS -1
+<message> string - Message to publish on the
+topic. Maximum 1024
+characters, printable ASCII.
+In case QoS -1, only predefined topics and short topics are allowed
+AT#MQSNPUBS=?
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 643 of 737 2025-08-26
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNPUBS=1,0,1,0,0,myMessage
+OK
+AT#MQSNPUBS=1,1,ab,0,1,myMessage
+OK
+AT#MQSNPUBS=1,2,1,0,1,myMessage
+OK
+AT#MQSNPUBS=1,1,ab,0,3,myMessage
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNPUBS=?
+#MQSNPUBS: (1-maxClients),(0-2),2,(0-1),(0-3),1024
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 644 of 737 2025-08-26
+AT#MQSNWCFG - Configure MQTT-SN last will and testament
+This command sets Last Will and Testament for the selected MQTT-SN client
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNWCFG=<instanceNumber>,<will_flag>[,<will_retain>,<will_qos>,<will_topic>,<will_msg>]
+Set command writes the parameters for the specified client
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The list of
+available clients is obtained with
+AT#MQSNEN? or the read command.
+To know maxClients value use test
+command.
+Value:
+1÷maxClients : client instance Number
+<will_flag> integer 0 Selects whether the client needs to specify a
+Last Will and Testament. If set to 0, this is
+the last parameter to be set.
+Values:
+0 : The client does not need to specify a Last Will and
+Testament
+1 : The client needs to specify a Last Will and
+Testament
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 645 of 737 2025-08-26
+<will_retain> integer 0 Selects whether the Last Will message needs
+to be retained by the server.
+Values:
+0 : The Last Will message does not need to be retained
+by the server
+1 : The Last Will message needs to be retained by the
+server
+<will_qos> integer 0 Quality of Service of the Last Will message
+Values:
+0 : Default value
+0÷2 : Quality of Service
+<will_topic> string - Topic to publish the Last Will message to.
+Maximum size is 256.
+<will_msg> string - Last Will message. Maximum size is 1024.
+AT#MQSNWCFG?
+Read command returns the Last Will and Testament (if any) of all active MQTT-SN clients in the
+format
+#MQSNWCFG:
+<instanceNumber>,<will_flag>[,<will_retain>,<will_qos>,<will_topic>,<will_message>]
+AT#MQSNWCFG=?
+Test command reports the available range of values for parameters.
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 646 of 737 2025-08-26
+• Set example
+AT#MQSNWCFG=1,0
+OK
+AT#MQSNWCFG=1,1,1,2,myLastWillTopic,myLastWillMessage
+OK
+• Read example
+AT#MQSNWCFG?
+#MQSNWCFG: 1,0
+#MQSNWCFG: 1,1,1,2,myLastWillTopic,myLastWillMessage
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNWCFG=?
+#MQSNWCFG: (1-maxClients),(0-1),(0-1),(0-2),256,1024
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 647 of 737 2025-08-26
+AT#MQSNSUB - Subscribe to a Topic
+Performs the subscription to a MQTT-SN topic.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNSUB=<instanceNumber>,<qos>,<topic_type>,<topic/topic_id>
+Subscribes to a topic.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of active clients is obtained
+with AT#MQSNCONN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<qos> integer N/A Desired Quality of service for
+the topic to be subscribed.
+Value:
+0÷2 : Quality of service
+<topic_type> integer 0 Type of topic to be subscribed
+Values:
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 648 of 737 2025-08-26
+0 : Normal topic
+1 : Pre-defined topic
+2 : Short topic
+<topic/topic_id> string - Name of the topic or short
+topic or pre-defined topic id.
+Maximum length supported is
+256.
+Additional info:
+In case of success, execution command returns qos granted and
+topic id received (in case of normal topic) in the format:
+#MQSNSUB: <qos>[,<topic_id>]
+AT#MQSNSUB=?
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNSUB=1,1,0,topicToSubscribe
+#MQSNSUB: 1,1
+OK
+AT#MQSNSUB=1,1,1,5
+#MQSNSUB: 1
+OK
+AT#MQSNSUB=1,1,2,ab
+#MQSNSUB: 1
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 649 of 737 2025-08-26
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNSUB=?
+#MQSNSUB: (1-maxClients),(0-2),(0-2),256
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 650 of 737 2025-08-26
+AT#MQSNCFG - Configure MQTT-SN parameters
+This command sets the connection parameters for the selected MQTT-SN client
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNCFG=<instanceNumber>,<hostname>,<port>,<cid>
+Set command writes the MQTT-SN parameters for the specified client
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of available clients is
+obtained with AT#MQSNEN? or
+the read command.
+To know maxClients value use
+test command
+Value:
+1÷maxClients : client instance Number
+<hostname> string - URL of the MQTT-SN Gateway.
+Maximum length of URL is 512.
+<port> integer N/A UDP port of the MQTT-SN
+Gateway
+Value:
+1÷65535 : UDP port
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 651 of 737 2025-08-26
+<cid> integer N/A PDP Context ID to be used for
+the connection
+Value:
+1÷6 : PDP Context ID
+AT#MQSNCFG?
+Read command returns the configuration all active MQTT-SN clients in the format
+#MQSNCFG: <instanceNumber>,<hostname>,<port>,<cid>
+AT#MQSNCFG=?
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNCFG=1,api.myGateway.com,11000,3
+OK
+• Read example
+AT#MQSNCFG?
+#MQSNCFG: 1,api.myGateway.com,11000,1
+#MQsNCFG: 2, Gateway.com,11000,1
+OK
+• Test example (refer to module output for real ranges)
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 652 of 737 2025-08-26
+AT#MQSNCFG=?
+#MQSNCFG: (1-maxClients),512,(1-65535),(1-6)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 653 of 737 2025-08-26
+AT#MQSNTCFG - Configure timeout parameters for MQTT-SN
+transmission
+This command sets the timeout options for the selected MQTT-SN client.
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNTCFG=<instanceNumber>,<pkt_timeout>
+Set command writes the timeout options for the specified client.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of available clients is
+obtained with AT#MQSNEN? or
+the test command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<pkt_timeout> integer 10 Timeout of the packet delivery.
+Values:
+10 : Default timeout 10 seconds
+1÷60 : Timeout in seconds
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 654 of 737 2025-08-26
+AT#MQSNTCFG?
+Read command returns the timeout configuration of  all active MQTT-SN clients in
+the format
+#MQSNTCFG: <instanceNumber>,<pkt_timeout>
+AT#MQSNTCFG=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNTCFG=1,10
+OK
+• Read example
+AT#MQSNTCFG?
+#MQSNTCFG: 1,5
+#MQSNTCFG: 1,20
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNTCFG=?
+#MQSNTCFG: (1-maxClients),(1-60)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 655 of 737 2025-08-26
+AT#MQSNDISC - Log out and disconnect from the MQTT-SN
+Gateway
+Performs the logout and disconnection from to the MQTT-SN Gateway.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNDISC=<instanceNumber>
+Disconnects gracefully from the MQTT-SN Gateway, then closes the network
+connection and socket.
+Parameter:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of active clients is obtained
+with AT#MQSNEN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+AT#MQSNDISC=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNDISC=1
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 656 of 737 2025-08-26
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNDISC=?
+#MQSNDISC: (1-maxClients)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 657 of 737 2025-08-26
+AT#MQSNUNS - Unsubscribe from a Topic
+Revokes the subscription to a MQTT-SN topic
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNUNS=<instanceNumber>,<topic_type>,<topic/topic_id>
+Unsubscribes from a topic
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of active clients is obtained
+with AT#MQSNCONN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<topic_type> integer 0 Type of topic
+Values:
+0 : Normal topic
+1 : Pre-defined topic
+2 : Short topic
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 658 of 737 2025-08-26
+<topic/topic_id> string - Name of the topic or short
+topic or pre-defined topic id.
+Maximum size is 256.
+AT#MQSNUNS=?
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNUNS=1,0,topicToUnsubscribe
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNUNS=?
+#MQSNUNS: (1-maxClients),(0-2),256
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 659 of 737 2025-08-26
+AT#MQSNREAD - Read messages received from the MQTT-SN
+Gateway
+Read the message payload from the queue slot provided.
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNREAD=<instanceNumber>,<mId>
+Read the message from the slot and for the provided client. The command will
+respond with
+#MQSNREAD: <instanceNumber><topic_type>,<topic_id>,<payload_len>
+Then the device shall prompt a characters sequence
+<less_than><less_than><less_than><carriage return><line feed>
+(IRA 60, 60, 60, 13, 10)
+followed by the data
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Select the client instance. The
+list of active clients is obtained
+with AT#MQSNEN?
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<mId> integer N/A The message slot Id to be read.
+The read operation will free the
+slot resource
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 660 of 737 2025-08-26
+Value:
+1÷30 : message slot Id to be read
+Additional info:
+When a message is received on the subscribed topic, an URC
+message is sent to all AT commands interfaces. There are 30
+messages slots available for incoming messages, and it is
+responsibility of the user to keep them empty by reading them
+with #MQSNREAD. If the message queue is full, and a new
+message arrives, an URC
+#MQSNRING: 0
+is received.
+Otherwise, for normal messages, the URC format is
+#MQSNRING: <instanceNumber>,<mid>,<topic_type>,<topic/
+topicId>,<len>
+Unsolicited fields:
+Name Type Description
+<instanceNumber> integer Selects the client instance. The list of
+active clients is obtained with
+AT#MQSNEN?
+Value: 1..<maxClients>
+To know maxClients value use test
+command.
+<mId> integer message slot id number, to be used to
+read the message content with
+AT#MQSNREAD command.
+Value:
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 661 of 737 2025-08-26
+1-30 : message slot id number
+<topic_type> integer Type of topic/topic id.
+Values:
+0 : Normal topic id (received
+from AT#MQSNREG)
+1 : Pre-defined topic id
+2 : Short topic
+<topic/topicId> string Normal topic id or short topic or predefined topic id.
+<len> integer Length in bytes of the received payload
+AT#MQSNREAD?
+Read command returns the unread messages count for each instance number for
+all active MQTT-SN clients in the format
+#MQSNREAD: <instanceNumber>,<unread>
+AT#MQSNREAD=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNREAD=1,2
+#MQSNREAD: 1,1,ab,10
+<<<
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 662 of 737 2025-08-26
+0123456789
+OK
+• Read example
+AT#MQSNREAD?
+#MQSNREAD: 1,0
+#MQSNREAD: 2,3
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNREAD=?
+#MQSNREAD: (1-maxClients),(1-30)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 663 of 737 2025-08-26
+AT#MQSNWTUP - Update MQTT-SN last will and testament Topic
+Set Last Will and Testament for the selected MQTT-SN client
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNWTUP=<instanceNumber>,<will_flag>[,<will_retain>[,<will_qos>[,<will_topic>]]]
+Send will topic update packet to the Gateway
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The list of
+available clients is obtained with
+AT#MQSNEN? or the read command.
+To know maxClients value use test
+command.
+Value:
+1÷maxClients : client instance
+<will_flag> integer 0 Selects whether the client needs to
+delete/update the Last Will and
+Testament. If set to 0, this is the last
+parameter to be set.
+Values:
+0 : The client wants to delete the Last Will and
+Testament
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 664 of 737 2025-08-26
+1 : The client needs to update a Last Will and
+Testament topic
+<will_retain> integer 0 Selects whether the Last Will
+message needs to be retained by the
+server
+Values:
+0 : The Last Will message does not need to be
+retained by the server
+1 : The Last Will message needs to be retained
+by the server
+<will_qos> integer 0 Quality of Service of the Last Will
+message
+Value:
+0÷2 : Quality of Service
+<will_topic> string - Topic to publish the Last Will
+message to
+AT#MQSNWTUP=?
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNWTUP=1,0
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 665 of 737 2025-08-26
+OK
+AT#MQSNWTUP=1,1,1,2,myLastWillTopic
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNWTUP=?
+#MQSNWTUP: (1-maxClients),(0-1),(0-1),(0-2),
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 666 of 737 2025-08-26
+AT#MQSNWMUP - Update MQTT-SN last will and testament
+Message
+Set Last Will and Testament for the selected MQTT-SN client
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNWMUP=<instanceNumber>,<will_msg>
+Send will message update packet to the Gateway
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+list of available clients is
+obtained with AT#MQSNEN? or
+the read command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<will_msg> string - Message of the Last Will
+message
+AT#MQSNWMUP=?
+Test command reports the available range of values for parameters
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 667 of 737 2025-08-26
+• Set example
+AT#MQSNWMUP=1,myLastWillMessage
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNWMUP=?
+#MQSNWMUP: (1-maxClients),
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 668 of 737 2025-08-26
+AT#MQSNSTATE - Set MQTT-SN client state
+This command initializes a MQTT-SN client and allocates the necessary resources.
+SIM Presence Setting saved Can be aborted
+Not required No No
+AT#MQSNSTATE=<instanceNumber>,<state>[,<duration>]
+Set command changes the MQTT-SN client state to "asleep", "awake" or "active"
+state.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance to
+activate or deactivate. The list
+of available clients is obtained
+with the read command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<state> integer N/A Desired state of the MQTT-SN
+client.
+Values:
+0 : Active state. This is the normal
+connected state in which all the MQTTSN operations can be performed. This
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 669 of 737 2025-08-26
+option is valid only if client is in asleep
+state
+1 : Asleep State: Client can enter asleep
+state whenever they are not active, and
+can become active whenever they have
+data to send or to receive. In this state,
+no MQTT-SN operation can be
+performed except sending keep-alive
+packets. User has to specify periodic
+duration of sleep state. Else, the
+command fails. This option is valid only
+if client is in active state.
+2 : Awake state: Required only to go to
+asleep state. Sleeping client will send a
+keep-alive packet to the gateway,
+receive all the buffered Publish packets
+sent by the gateway and will again go to
+asleep state. This option is valid only if
+client is in asleep state.
+<duration> integer - Sets the period of clients sleep
+in seconds. After expiry of this
+duration, the client sends a
+keep-alive packet to the
+gateway, receives all the
+buffered Publish packet sent
+by the gateway and again goes
+to asleep state. This parameter
+is mandatory if user is setting
+value of <state> parameter to
+1.
+AT#MQSNSTATE?
+Read command returns the state of all initialised MQTT-SN clients in the format
+#MQSNSTATE: <instanceNumber>,<state>[,<duration>]
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 670 of 737 2025-08-26
+AT#MQSNSTATE=?
+Test command reports the available range of values for parameters.
+• Set example
+AT#MQSNSTATE=1,0
+OK
+AT#MQSNSTATE=1,1,60
+OK
+AT#MQSNSTATE=1,2
+#MQSNRING:1,5,2,ab,10
+OK
+• Read example
+AT#MQSNSTATE?
+#MQSNSTATE: 1,1,60
+#MQSNSTATE: 2,0
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNSTATE=?
+#MQSNSTATE: (1-maxClients),(0-2),(60-3600)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 671 of 737 2025-08-26
+AT#MQSNSOCK - Enable/disable MQTT-SN client socket
+Performs the connection and login to the MQTT-SN Gateway
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNSOCK=<instanceNumber>,<create>
+Set command creates/closes UDP socket for MQTT-SN client. User can either
+directly Publish on QoS -1 after creating the socket or can connect to the gateway
+and then perform other MQTT-SN operations.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+number of available clients is
+obtained with the test
+command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<create> integer N/A Sets if the selected client socket
+must be created or closed
+Values:
+0 : Close socket. To be used when client is
+in socket connected state
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 672 of 737 2025-08-26
+1 : Create socket
+AT#MQSNSOCK?
+Read command reports the socket state of active MQTT-SN clients in the format:
+#MQSNSOCK =<instanceNumber>,<socket_created>
+AT#MQSNSOCK=?
+Test command reports the available range of values for parameters
+• Set example
+AT#MQSNSOCK=1,1
+OK
+• Read example
+AT#MQSNSOCK?
+#MQSNSOCK: 1,1
+#MQSNSOCK: 2,0
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNSOCK=?
+#MQSNSOCK: (1-maxClients),(0-1)
+OK
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 673 of 737 2025-08-26
+AT#MQSNCONN - Connect and log in the MQTT-SN Gateway
+Performs the connection and login to the MQTT-SN Gateway
+SIM Presence Setting saved Can be aborted
+Required No No
+AT#MQSNCONN=<instanceNumber>,<clientID>
+Set command performs network connection (using parameters set with
+#MQSNCFG) and sends the CONNECT packet to the MQTT-SN Gateway.
+Parameters:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client instance. The
+number of available clients is
+obtained with the test
+command.
+To know maxClients value use
+test command.
+Value:
+1÷maxClients : client instance Number
+<clientID> string - Client identifier. Identifies each
+MQTT-SN client that connects
+to the MQTT-SN Gateway.
+Maximum length is 23.
+A URC message in the following format is sent to notify user about
+asynchronous disconnect:
+#MQSNCONN: <instanceNumber>,DISCONNECT
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 674 of 737 2025-08-26
+Where, <instanceNumber> is the client instance of the MQTT-SN
+client disconnected.
+If #MQSNCONN URC is received, socket is closed internally and
+client moves to init state. User can establish the connection again
+with AT#MQSNSOCK and AT#MQSNCONN commands.
+AT#MQSNCONN?
+Read command reports the configuration of active MQTT-SN connections in the
+format:
+#MQSNCONN=<instanceNumber>,<state>
+Additional info:
+Parameter:
+Name Type Default Description
+<instanceNumber> integer N/A Selects the client
+instance. The
+number of
+available clients is
+obtained with the
+test command.
+To know
+maxClients value
+use test
+command.
+Value:
+1÷maxClients : client
+instance
+Number
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 675 of 737 2025-08-26
+<state> integer N/A Client status.
+Values:
+0 : client is in init state
+1 : socket is created
+2 : client is connected
+3 : connection closed by the
+gateway. Issue
+AT#MQSNSOCK and
+AT#MQSNCONN to open
+connection again
+4 : Ping request failed
+5 : Connect request timed
+out
+6 : Client is in "asleep" state
+7 : Client is in "awake" state
+8 : Client is in unknown state.
+Deinit client and open it
+again with AT#MQSNEN
+AT#MQSNCONN=?
+Test command reports the available range of values for parameters
+ME310M1 AT Commands Reference Guide
+80756ST11189A Rev. 3 Page 676 of 737 2025-08-26
+• Set example
+AT#MQSNCONN=1,myClientID
+• Read example
+AT#MQSNCONN?
+#MQSNCONN: 1,2
+#MQSNCONN: 2,3
+OK
+• Test example (refer to module output for real ranges)
+AT#MQSNCONN=?
+#MQSNCONN: (1-maxClients),23
+OK
